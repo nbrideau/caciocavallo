@@ -25,19 +25,75 @@
 package com.github.caciocavallosilano.cacio.ctc;
 
 import com.github.caciocavallosilano.cacio.peer.managed.FullScreenWindowFactory;
-import sun.awt.image.BufferedImageGraphicsConfig;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.awt.geom.AffineTransform;
 
-public class CTCGraphicsConfiguration extends BufferedImageGraphicsConfig {
+public class CTCGraphicsConfiguration extends GraphicsConfiguration {
+    private static final int numconfigs = BufferedImage.TYPE_BYTE_BINARY;
+    private static CTCGraphicsConfiguration[] standardConfigs =
+        new CTCGraphicsConfiguration[numconfigs];
+    private static CTCGraphicsConfiguration[] scaledConfigs =
+        new CTCGraphicsConfiguration[numconfigs];
+    
+
+    public static CTCGraphicsConfiguration getConfig(BufferedImage bImg) {
+        return getConfig(bImg, 1, 1);
+    }
+
+    public static CTCGraphicsConfiguration getConfig(BufferedImage bImg,
+                                                        double scaleX,
+                                                        double scaleY)
+    {
+        CTCGraphicsConfiguration ret;
+        int type = bImg.getType();
+
+        CTCGraphicsConfiguration[] configs = (scaleX == 1 && scaleY == 1)
+                ? standardConfigs : scaledConfigs;
+
+        if (type > 0 && type < numconfigs) {
+            ret = configs[type];
+            if (ret != null && ret.scaleX == scaleX && ret.scaleY == scaleY) {
+                return ret;
+            }
+        }
+        ret = new CTCGraphicsConfiguration(bImg, scaleX, scaleY);
+        if (type > 0 && type < numconfigs) {
+            configs[type] = ret;
+        }
+        return ret;
+    } 
 
     private CTCGraphicsDevice device;
+    private final ColorModel model;
+    private final Raster raster;
+    private final double scaleX;
+    private final double scaleY;
+
+    CTCGraphicsConfiguration(BufferedImage bImg, double scaleX, double scaleY) {
+        this.model  = bImg.getColorModel();
+        this.raster = bImg.getRaster().createCompatibleWritableRaster(1, 1);
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+    }
 
     CTCGraphicsConfiguration(CTCGraphicsDevice dev) {
-        super(new BufferedImage(FullScreenWindowFactory.getScreenDimension().width, FullScreenWindowFactory.getScreenDimension().height, BufferedImage.TYPE_INT_ARGB), null);
         device = dev;
+        BufferedImage bufImg = new BufferedImage(FullScreenWindowFactory.getScreenDimension().width, FullScreenWindowFactory.getScreenDimension().height, BufferedImage.TYPE_INT_ARGB);
+        this.model  = bufImg.getColorModel();
+        this.raster = bufImg.getRaster().createCompatibleWritableRaster(1, 1);
+        this.scaleX = 1;
+        this.scaleY = 1;
+    }
+
+    @Override
+    public BufferedImage createCompatibleImage(int width, int height) {
+        WritableRaster wr = raster.createCompatibleWritableRaster(width, height);
+        return new BufferedImage(model, wr, model.isAlphaPremultiplied(), null);
     }
 
     @Override
@@ -53,6 +109,16 @@ public class CTCGraphicsConfiguration extends BufferedImageGraphicsConfig {
     @Override
     public ColorModel getColorModel(int transparency) {
         return ColorModel.getRGBdefault();
+    }
+
+    @Override
+    public AffineTransform getDefaultTransform() {
+        return AffineTransform.getScaleInstance(scaleX, scaleY);
+    }
+
+    @Override
+    public AffineTransform getNormalizingTransform() {
+        return new AffineTransform();
     }
 
     @Override

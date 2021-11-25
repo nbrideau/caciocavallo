@@ -251,7 +251,7 @@ class ProxyWindowPeer implements WindowPeer {
         return getTarget().isFocusable();
     }
 
-    @Override
+    //XXX@Override
     public Image createImage(ImageProducer producer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -261,17 +261,17 @@ class ProxyWindowPeer implements WindowPeer {
         return getTarget().createImage(width, height);
     }
 
-    @Override
+    //XXX@Override
     public VolatileImage createVolatileImage(int width, int height) {
         return getTarget().createVolatileImage(width, height);
     }
 
-    @Override
+    //XXX@Override
     public boolean prepareImage(Image img, int w, int h, ImageObserver o) {
         return getTarget().prepareImage(img, w, h, o);
     }
 
-    @Override
+    //XXX@Override
     public int checkImage(Image img, int w, int h, ImageObserver o) {
         return getTarget().checkImage(img, w, h, o);
     }

@@ -50,12 +50,13 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.3.1</version>
         <configuration>
           <additionalOptions>
             <additionalOption>-XDignore.symbol.file=true</additionalOption>
@@ -99,7 +100,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.3</version>
+          <version>1.6.6</version>
           <extensions>true</extensions>
           <configuration>
             <serverId>ossrh</serverId>
@@ -112,19 +113,19 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
           <configuration>
-            <source>11</source>
-            <target>11</target>
+            <source>17</source>
+            <target>17</target>
             <compilerArgs>
-              <arg>-XDignore.symbol.file=true</arg>
+                <arg>-XDignore.symbol.file=true</arg>
             </compilerArgs>
           </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.12</version>
+          <version>2.22.2</version>
           <configuration>
-	    <runOrder>random</runOrder>
+            <runOrder>random</runOrder>
             <systemPropertyVariables>
               <java.awt.headless>false</java.awt.headless>
               <awt.toolkit>CTCToolkit</awt.toolkit>
@@ -149,7 +150,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

@@ -109,7 +109,7 @@ public class CTCToolkit extends CacioToolkit {
         return null;
     }
 
-    @Override
+    //XXX@Override
     public RobotPeer createRobot(Robot target, GraphicsDevice screen)
             throws AWTException {
         return new CTCRobotPeer();

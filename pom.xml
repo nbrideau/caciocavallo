@@ -125,6 +125,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.2</version>
           <configuration>
+            <argLine>--add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED</argLine>
             <runOrder>random</runOrder>
             <systemPropertyVariables>
               <java.awt.headless>false</java.awt.headless>
